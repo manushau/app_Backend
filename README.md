@@ -14,7 +14,9 @@
 7. then: ls
 
 8. you should see a list of : __init__.py, __pycache__, admin.py and other files. That means you are in the right level
+
     then type: python3 -m venv .venv           (if you work with python, not python3, then type: python ......)
+
     then: .venv\Scripts\activate     (on Windows)
           source .venv/bin/activate  (on mac)
  
@@ -41,5 +43,5 @@
     * 
         backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
         HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
-    SOLUTION : run in VS Code terminal:   python -m pip install Pillow     or       python3 -m pip install Pillow          (check your python version)
+SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    python3 -m pip install      Pillow          (check your python version)
     
