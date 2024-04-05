@@ -5,15 +5,17 @@
 
 3. then : code .
 
-4. the project opens in VS Code
+4.  OR instead of steps 1-3 open VS Code (with no project open) , click on the 3rd icon on the vertical panel on the left (source control) and click on 'clone repository'. Then you will need to paste the repo's URL and thats it.
 
-5. you need to generate .venv file, so fllow the below steps:
+5. the project opens in VS Code
 
-6. in VS Code terminal type: cd backend_server
+6. you need to generate .venv file, so fllow the below steps:
 
-7. then: ls
+7. in VS Code terminal type: cd backend_server
 
-8. you should see a list of : __init__.py, __pycache__, admin.py and other files. That means you are in the right level
+8. then: ls
+
+9. you should see a list of : __init__.py, __pycache__, admin.py and other files. That means you are in the right level
 
     then type: python3 -m venv .venv           (if you work with python, not python3, then type: python ......)
 
