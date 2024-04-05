@@ -80,12 +80,12 @@ def signup(request):
 @api_view(['POST', 'GET'])
 def login(request, format=None):
     if request.method == 'POST':
-        fetched_username = request.data.get("username")
+        fetched_email = request.data.get("email")
         fetched_password = request.data.get("password")
 
-        fetched = warehouse.objects.filter(username = fetched_username).exists()
+        fetched = warehouse.objects.filter(email = fetched_email).exists()
         if fetched:
-            user = warehouse.objects.get(username = fetched_username)
+            user = warehouse.objects.get(email = fetched_email)
             
 
             if (fetched_password != user.password):
