@@ -32,6 +32,10 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('home/', views.home, name='home'),
     path('redirected_home.html/', views.login, name='home'),
+    # help messages
+    path('messages/', views.message_create, name='message_create'),
+    #TODO: for admin account in flutter: also get all messages with the same thread_number (all messages for that open case)
+    #TODO: for admin account in fluttre: be able to close the case, if resolved
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

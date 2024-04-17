@@ -1,21 +1,19 @@
 # Import necessary modules and classes
+
+from .models import Users, warehouse, acc_details, messages
+from .serializers import UserSerializer, AccDetailsSerializer, MessagesSerializer
+from .forms import UserCreationForm,SignUpForm,LoginForm
 from django.http import JsonResponse
-from .models import Users
-from .serializers import UserSerializer, AccDetailsSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status 
-from .forms import UserCreationForm
-from .forms import SignUpForm
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .forms import LoginForm  
-from django.shortcuts import redirect
-from .auth_form_serializers import LoginSerializer, SignupSerializer
-from rest_framework.exceptions import ValidationError
-from .models import warehouse  
-from .models import acc_details
 from django.core.exceptions import ObjectDoesNotExist
+from .auth_form_serializers import LoginSerializer, SignupSerializer
+
+
 
 def home(request):
     return render(request, "home.html")
@@ -166,79 +164,16 @@ def user_list(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+#                                   HELP MESSAGES
 
-
-
-'''
-@api_view(['GET', 'POST'])
-def user_list(request, format=None):
-    if request.method == 'GET':
-         # Retrieve all users
-        users = Users.objects.all()
-        # Serialize all users
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
+# Create 
+@api_view(['POST'])
+def message_create(request, format=None):
     if request.method == 'POST':
-       # Create a new user
-       serializer = UserSerializer(data=request.data)
-       if serializer.is_valid():
+        # Create a new message
+        serializer = MessagesSerializer(data=request.data)
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-    # Return errors if the data is invalid
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-'''
-
-# ---
-
-'''
-@api_view(['POST', 'GET'])
-def test_take_input(request, format=None):
-    if request.method == 'POST':
-        fetched_email = request.data.get("email")
-        fetched_username = request.data.get("username")
-        fetched_password = request.data.get("password")
-
-        email_is_exist = warehouse.objects.filter(email = fetched_email).exists()
-        username_is_exist = warehouse.objects.filter(username = fetched_username).exists()
-
-        if email_is_exist:
-            return Response("This email does  exist in the warehouse records.", status= 203)
-        
-        elif username_is_exist:
-            return Response("This username does  exist in the warehouse records.", status= 203)
-        
-        else:
-
-            input_into_db = warehouse(email=fetched_email, username=fetched_username, password=fetched_password)
-            input_into_db.save()
-
-            # Optionally, return a response indicating success or any other necessary data
-            return redirect('home')
-    elif request.method == 'GET':
-        # Render the signup form for GET requests
-        return render(request, 'signup.html')
-'''
-
-# ---
-
-'''
- # View for user login using LoginSerializer
- def user_login(request):
-     if request.method == 'POST':
-         serializer = LoginSerializer(data=request.POST)
-         if serializer.is_valid():
-             username = serializer.validated_data['username']
-             password = serializer.validated_data['password']
-             user = authenticate(username=username, password=password)
-             if user is not None:
-                 login(request, user)
-                 # Redirect to a specific page after successful login
-                 return redirect('')  # Change 'home' 
-     else:
-         serializer = LoginSerializer()
-     return render(request, 'login.html', {'serializer': serializer})
-'''
-
-# ---
-
+        # Return errors if the data is invalid
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

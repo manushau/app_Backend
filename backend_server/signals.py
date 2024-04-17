@@ -14,4 +14,4 @@ def create_table2_entry(sender, instance, created, **kwargs):
         )
 
 # maybe a signal will need to be created here too for Account DELETE, to dlete all instances of that user
-# across all tables
+# across all tables .
