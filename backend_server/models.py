@@ -25,6 +25,8 @@ class acc_details(models.Model):
     phone_number = models.CharField(max_length=15, null=True, blank=True) 
     image = models.ImageField(null=True, blank=True,upload_to='images/')
 
+
+# help centre messages
 class messages(models.Model):
     GENERAL_INQUIRY = 'General Inquiry'
     TECHNICAL_SUPPORT = 'Technical Support'
