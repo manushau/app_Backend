@@ -75,28 +75,23 @@ def signup(request):
 
 
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 def login(request, format=None):
     if request.method == 'POST':
         fetched_email = request.data.get("email")
         fetched_password = request.data.get("password")
 
-        fetched = warehouse.objects.filter(email = fetched_email).exists()
+        fetched = warehouse.objects.filter(email=fetched_email).exists()
         if fetched:
-            user = warehouse.objects.get(email = fetched_email)
-            
+            user = warehouse.objects.get(email=fetched_email)
 
-            if (fetched_password != user.password):
+            if fetched_password != user.password:
                 print("incorrect password ")
                 return Response({"message": "incorrect password"}, status=202)
-            
             else:
-                # return Response({"message": "username = {} and email = {}".format(user.username,user.email)}, status=201)
-                return render(request,'home.html')
-        
+                return JsonResponse({'email': user.email, 'id': user.id})
         else:
-            return Response("This username does not exist in the warehouse records.", status= 203)
-
+            return Response("This username does not exist in the warehouse records.", status=203)
 
 
 
