@@ -12,7 +12,42 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .auth_form_serializers import LoginSerializer, SignupSerializer
+from django.http import JsonResponse
+from .models import Users
+from .serializers import UserSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status 
+from .forms import UserCreationForm
+from .forms import SignUpForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from .forms import LoginForm  
+from django.shortcuts import redirect
+from .auth_form_serializers import LoginSerializer, SignupSerializer
+from rest_framework.exceptions import ValidationError
+from .models import warehouse  
+from django.http import JsonResponse
+from .models import warehouse
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, redirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import warehouse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
 
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.core.mail import send_mail
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
 def home(request):
@@ -172,3 +207,62 @@ def message_create(request, format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # Return errors if the data is invalid
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+
+@api_view(['POST'])
+@csrf_exempt
+def login_view(request):
+    if request.method == 'POST':
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        try:
+            user = warehouse.objects.get(email=email)
+            if user.password == password:
+                request.session['email'] = user.email
+                request.session['id'] = user.id  # Start the session with user email
+                return Response({
+                    'message': 'Login successful',
+                    'email': user.email,
+                    'id': user.id
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({'message': 'Incorrect password'}, status=status.HTTP_401_UNAUTHORIZED)
+        except warehouse.DoesNotExist:
+            return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+    
+
+
+@api_view(['DELETE', 'GET'])
+@csrf_exempt
+def delete_user(request, id,format=None):
+    if request.method == 'GET':
+        # Extract password from the request data
+        user_password = request.GET.get('password')
+
+        try:
+            # Get the user instance. Adjust this if your user reference is different.
+            user = warehouse.objects.get(pk=id)
+            #print(user_password)
+            print(user_password)
+            # Authenticate the user to check if the password is correct
+            if (user.password == user_password):
+                # Delete the user if authentication is successful
+                user.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                # Return 403 Forbidden if the password is incorrect
+                return Response(status=status.HTTP_403_FORBIDDEN)
+        except User.DoesNotExist:
+            # Return 404 Not Found if the user does not exist
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    else:
+        # This else part is technically unnecessary since @api_view restricts to DELETE only
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
