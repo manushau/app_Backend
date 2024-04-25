@@ -46,4 +46,26 @@
         backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
         HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
 SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    python3 -m pip install      Pillow          (check your python version)
+
+17. ** UPDATED **
+    add a .env to store sensitive data.
+    first in VS Code in terminal type: pip install python-dotenv
+    then at project root add a new file called ' .env '
+    inside specify the following values:
+        SECRET_KEY
+        DEBUG
+        ALLOWED_HOSTS
+        MEDIA_URL
+        MEDIA_ROOT
+        DATABASES
+        EMAIL_BACKEND
+        DEFAULT_FROM_EMAIL
+    
+
+
+
+
+
+
+    
     
