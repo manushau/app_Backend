@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models import warehouse, acc_details
 
@@ -12,6 +12,16 @@ def create_table2_entry(sender, instance, created, **kwargs):
             email=instance.email,
             username=instance.username,
         )
+
+# when we terminate the account, the details are deleted in the warehouse table, as well as from the acc_details table or any table
+# that we want to add in the future
+@receiver(post_delete, sender=warehouse)
+def delete_table2_entry(sender, instance, **kwargs):
+    try:
+        acc_detail_object = acc_details.objects.get(email=instance.email)
+        acc_detail_object.delete()
+    except acc_detail_object.DoesNotExist:
+        pass
 
 # maybe a signal will need to be created here too for Account DELETE, to dlete all instances of that user
 # across all tables .
