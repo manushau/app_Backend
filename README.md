@@ -53,11 +53,6 @@ SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    pytho
     then at project root add a new file called ' .env '
     inside specify the following values:
         SECRET_KEY
-        DEBUG
-        ALLOWED_HOSTS
-        MEDIA_URL
-        MEDIA_ROOT
-        DATABASES
         EMAIL_BACKEND
         DEFAULT_FROM_EMAIL
     
