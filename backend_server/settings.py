@@ -28,7 +28,7 @@ DEBUG = True
 
 # settings.py
 # so that flutter and django can connect on my machine over network
-ALLOWED_HOSTS = ['192.168.1.104', 'localhost', '127.0.0.1','0.0.0.0']
+ALLOWED_HOSTS = ['192.168.1.31', 'localhost', '127.0.0.1','0.0.0.0']
 
 
 
@@ -122,6 +122,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# settings.py
+DEFAULT_FROM_EMAIL = 'manushaumayanga33@gmail.com'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
