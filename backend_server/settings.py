@@ -31,6 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'True' 
 
+
 # settings.py
 # so that flutter and django can connect on my machine over network
 ALLOWED_HOSTS = [
@@ -91,7 +92,7 @@ WSGI_APPLICATION = 'backend_server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -164,4 +165,4 @@ LOGGING = {
 '''
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

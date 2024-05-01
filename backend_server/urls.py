@@ -28,14 +28,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # URL for the Django admin interface
     path('users/', views.user_list),  # URL for handling user list operations (GET and POST)
     path('update/<str:email>/', views.user_detail),  # URL for handling individual user operations (GET, PUT, DELETE)
-    path('signup/', views.test_take_input, name='signup'),
-    path('login/', views.login, name='login'),
+    path('signup/', views.signup, name='signup'),
     path('home/', views.home, name='home'),
-    path('redirected_home.html/', views.login, name='home'),
+    #path('redirected_home.html/', views.login, name='home'),
     # help messages
-    path('messages/', views.message_create, name='message_create'),
+    path('messages/', views.help_center_message_create, name='hc_message_create'),
+    path('save_ta_message/', views.terminate_account_message_create, name='ta_message_create'),
     path('login/', views.login_view, name='login'),
-    path('warehouse/<int:id>/',  views.delete_user, name='delete_user'),
+    path('user/authenticate/<str:email>/',  views.auth_password, name='auth_password'),
+    path('user/delete/<str:email>/', views.delete_user, name='delete_user'),
     #TODO: for admin account in flutter: also get all messages with the same thread_number (all messages for that open case)
     #TODO: for admin account in fluttre: be able to close the case, if resolved
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
