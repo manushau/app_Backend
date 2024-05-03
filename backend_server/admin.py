@@ -1,14 +1,13 @@
 from django.contrib import admin
-from .models import Users
-from .models import warehouse
-from .models import acc_details
-from .models import messages
+from .models import MyUser,AccountDetails,HelpCentreMessage,TerminateAccountMessage, WorkoutType, WorkoutEntry
 
 # Registers the Users model with the Django admin interface
-admin.site.register(Users)
-admin.site.register(warehouse)
-admin.site.register(acc_details)
-admin.site.register(messages)
+admin.site.register(MyUser)
+admin.site.register(AccountDetails)
+admin.site.register(HelpCentreMessage)
+admin.site.register(TerminateAccountMessage)
+admin.site.register(WorkoutType)
+admin.site.register(WorkoutEntry)
 # @admin.register(warehouse)
 # class warehouseadmin(admin.ModelAdmin):
 #     pass 

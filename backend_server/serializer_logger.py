@@ -1,10 +1,10 @@
-from .models import Users
+from .models import MyUser
 from .auth_form_serializers import LoginSerializer, SignupSerializer
 from . import auth_form_serializers  
 
 def print_serialized_data():
     # Fetch data from your database using Django models
-    queryset = Users.objects.all()  # Example queryset, modify according to your model
+    queryset = MyUser.objects.all()  # Example queryset, modify according to your model
 
     # Serialize the retrieved data
     serialized_data = auth_form_serializers(queryset, many=True).data
