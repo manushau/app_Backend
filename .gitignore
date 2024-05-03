@@ -7,6 +7,9 @@ backend_server/.venv/
 # Ignore compiled Python files
 *.pyc
 
+# Ignore .env
+*.env
+
 # Ignore local settings file (if you have one)
 backend_server/settings/local.py
 
