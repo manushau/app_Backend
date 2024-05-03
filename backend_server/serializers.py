@@ -26,11 +26,11 @@ class TerminateAccMsgSerializer(serializers.ModelSerializer):
 class WorkoutTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutType
-        fields = ['name','session_duration','level','type'] 
+        fields = ['session_id','email','name','session_duration','level','type', ] 
 
 class WorkoutEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkoutEntry
-        fields = ['user','workout_type','speed','rpm', 'distance', 'heart_rate', 'temperature','incline', 'timestamp','session_id'] 
+        fields = ['session_id','speed','rpm', 'distance', 'heart_rate', 'temperature','incline', 'timestamp',] 
 # or :  fields: '__all__'   if we want to choose all fields
 

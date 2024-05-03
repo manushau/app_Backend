@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
-from .models import MyUser, AccountDetails
+from .models import MyUser, AccountDetails,WorkoutType, WorkoutEntry
 
 # those are not needed anymore, as PK, FK and on_delete = ..... were implemented in models doing exatly what the signals used to
 
@@ -8,12 +8,13 @@ from .models import MyUser, AccountDetails
 # Every time a new user is created in warehouse model (where the request is sent to), 
 # the email and username values are passed there too. Those will not de editable so can be sent once.
 @receiver(post_save, sender=MyUser)
-def create_table2_entry(sender, instance, created, **kwargs):
+def pass_from_MyUser_to_AccDet(sender, instance, created, **kwargs):
     if created:
         AccountDetails.objects.create(
             email=instance,  
             username=MyUser.objects.get(username=instance.username), 
         )
+
 
 
 

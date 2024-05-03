@@ -1,5 +1,9 @@
 from django.db import models
 from django.utils import timezone
+import uuid
+from django.utils import timezone
+
+
 
 
 
@@ -79,7 +83,7 @@ class HelpCentreMessage(models.Model):
         (ESCALATED, 'Escalated'),
     ]
 
-    thread_number = models.UUIDField(max_length=100, unique=True, default='-1') # UUID format, generate in flutter and pass 
+    thread_number = models.UUIDField(max_length=100, unique=True, default='') # UUID format, generate in flutter and pass 
     email = models.ForeignKey(MyUser,on_delete = models.CASCADE)
     subject = models.CharField(max_length=50)
     topic = models.CharField(max_length=30, choices=TOPIC_CHOICES) 
@@ -118,8 +122,11 @@ class TerminateAccountMessage(models.Model):
 
 # here we have a workout type when setting the details in set_workout_page in Flutter. An instance of this will be 
 # needed for the actual WorkoutEntry table below
+#           - timestamp is created here automatically
+#           - the names of the choices NEED to match the values you send from Flutter
+#           - based on the session_id relationship here (PK) and with WorkoutEntry table where it is an FK, you can perform joins like LEFT OUTER JOIN to get one table with all data to work on
 class WorkoutType(models.Model):
-    VR_GAME = 'VRGame'
+    VR_GAME = 'VR Game'
     CYCLING = 'Cycling'
     RUNNING = 'Running'
     YOGA = 'Yoga'
@@ -128,7 +135,7 @@ class WorkoutType(models.Model):
     HIGH_INTENSITY = 'High Intensity'
 
     NAME_CHOICES = [
-        (VR_GAME, 'VRGame'),
+        (VR_GAME, 'VR Game'),
         (CYCLING, 'Cycling'),
         (RUNNING, 'Running'),
         (YOGA, 'Yoga'),
@@ -162,10 +169,15 @@ class WorkoutType(models.Model):
         (CONTINUOUS, 'Continuous'),
     ]
 
+    session_id = models.CharField(max_length=100, primary_key=True) 
+    email =  models.ForeignKey(MyUser,on_delete = models.CASCADE, default='', to_field='email')          # when user deleted, delete records too
     name = models.CharField(max_length=20, choices=NAME_CHOICES)
     session_duration = models.IntegerField(choices=DURATION_CHOICES)
     level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    
 
     # this is for admin interface
     def __str__(self):
@@ -180,8 +192,7 @@ class WorkoutType(models.Model):
 #           - UUID will be generated once for a sessionm in Flutter
 #           - the attributes (speed, rpm etc) can be null as different workouts will collect different measures
 class WorkoutEntry(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)                # when user deleted, delete records too
-    workout_type = models.ForeignKey(WorkoutType, on_delete=models.CASCADE) # when user deleted, delete records too
+    session_id = models.ForeignKey(WorkoutType, on_delete=models.CASCADE, related_name='session_id_workouttype', to_field='session_id')
     speed = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     rpm = models.IntegerField(null=True, blank=True)
     distance = models.DecimalField(max_digits=6, decimal_places=2,null=True, blank=True)
@@ -189,7 +200,7 @@ class WorkoutEntry(models.Model):
     temperature = models.DecimalField(max_digits=5, decimal_places=2,null=True, blank=True)
     incline = models.IntegerField(null=True, blank=True)
     timestamp = models.DateTimeField(null=True, blank=True) # because sometimes there might be errors when collecting data
-    session_id = models.UUIDField(max_length=100, unique=True, default='-1')
+    
 
     # this is for admin interface
     def __str__(self):

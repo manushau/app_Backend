@@ -1,7 +1,7 @@
 # Import necessary modules and classes
 
 from .models import MyUser, AccountDetails, HelpCentreMessage, TerminateAccountMessage
-from .serializers import UserSerializer, AccountDetailsSerializer, HelpCentreMsgSerializer, TerminateAccMsgSerializer
+from .serializers import UserSerializer, AccountDetailsSerializer, HelpCentreMsgSerializer, TerminateAccMsgSerializer, WorkoutEntrySerializer, WorkoutTypeSerializer
 from .forms import UserCreationForm,SignUpForm,LoginForm
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -251,3 +251,30 @@ def get_all_details(request):
         return JsonResponse({'details': details_list})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+#                                   SAVE WORKOUT SETTINGS 
+
+# from flutter 'set_workout_page.dart'
+@api_view(['POST'])
+def set_workout(request):
+    if request.method == 'POST':
+        workout_type_serializer = WorkoutTypeSerializer(data=request.data)
+        if workout_type_serializer.is_valid():
+            # save to WorkoutType
+            workout_type = workout_type_serializer.save()
+            return Response(workout_type_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(workout_type_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#                                   SAVE WORKOUT DATA (every second)
+ 
+@api_view(['POST'])
+def wrk_data(request):
+    if request.method == 'POST':
+        serializer = WorkoutEntrySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
