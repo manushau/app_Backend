@@ -4,10 +4,6 @@ import uuid
 from django.utils import timezone
 
 
-
-
-
-
 # When creating a user you need to provide all 3 fields, out of which:
 #           - email will be a primary key and unique (PK implies uniqueness)
 #           - username will need to be unique
