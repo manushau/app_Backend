@@ -32,25 +32,27 @@
 13. you should see: README.md, backend_server and other
 
 14.     add a .env to store sensitive data.
-    first in VS Code in terminal type: pip install python-dotenv
-    then at project root add a new file called ' .env '
-    inside specify the following values:
+    first in VS Code in terminal type: pip install python-dotenv then at project root add a new file called ' .env ' inside specify the following values:
+    
         SECRET_KEY
+    
         EMAIL_BACKEND
+    
         DEFAULT_FROM_EMAIL
 
 
-15. type : python3 manage.py makemigrations                          (if you work with python, not python3, then type: python manage.py makemigrations)
+16. type : python3 manage.py makemigrations                          (if you work with python, not python3, then type: python manage.py makemigrations)
 
-16. then: python3 manage.py migrate                                  (if you work with python, not python3, then type: python manage.py makemigrations)
+17. then: python3 manage.py migrate                                  (if you work with python, not python3, then type: python manage.py makemigrations)
 
-17. to run the backend: python3 manage.py runserver 0.0.0.0:8000     (if you work with python, not python3, then type: python manage.py runserver 0.0.0.0:8000)
+18. to run the backend: python3 manage.py runserver 0.0.0.0:8000     (if you work with python, not python3, then type: python manage.py runserver 0.0.0.0:8000)
 
-18. !!!! Possible errors:
-    * 
-        backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
+19. !!!! Possible errors:
+    
+    * backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
         HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
 SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    python3 -m pip install      Pillow          (check your python version)
+
 
     * ModuleNotFoundError: No module named 'dotenv'
 
