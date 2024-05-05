@@ -34,6 +34,7 @@
     then:
 
         .venv\Scripts\activate     (on Windows)
+    
    
         source .venv/bin/activate  (on mac)
  
@@ -80,7 +81,7 @@ then at project root add a new file called ' .env ' inside specify the following
 
 32. !!!! Possible errors:
     
-    1) backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
+1) backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
         HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
 SOLUTION : run in VS Code terminal:  (check your python version)
 
@@ -91,7 +92,7 @@ or
         python3 -m pip install Pillow          
 
 
-    2) ModuleNotFoundError: No module named 'dotenv'
+2) ModuleNotFoundError: No module named 'dotenv'
 
 SOLUTION : in terminal type : 
 
