@@ -17,21 +17,23 @@
 
 9. you should see a list of : __init__.py, __pycache__, admin.py and other files. That means you are in the right level
 
-    then type: python3 -m venv .venv           (if you work with python, not python3, then type: python ......)
+    then type:     python3 -m venv .venv           (if you work with python, not python3, then type: python ......)
 
-    then: .venv\Scripts\activate     (on Windows)
+    then:
+          .venv\Scripts\activate     (on Windows)
+   
           source .venv/bin/activate  (on mac)
  
 
-10. then type: pip install Django djangorestframework
+11. then type: pip install Django djangorestframework
 
-11. then go one level up. type: cd ..
+12. then go one level up. type: cd ..
 
-12. type: ls
+13. type: ls
 
-13. you should see: README.md, backend_server and other
+14. you should see: README.md, backend_server and other
 
-14.     add a .env to store sensitive data.
+15.     add a .env to store sensitive data.
     first in VS Code in terminal type: pip install python-dotenv then at project root add a new file called ' .env ' inside specify the following values:
     
         SECRET_KEY
