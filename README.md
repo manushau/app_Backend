@@ -99,7 +99,13 @@ SOLUTION : in terminal type :
         pip list
         
 In the list find dotenv dependency. 
-if found, delete it and re-install
+if found, delete it and re-install:
+
+        pip uninstall python-dotenv
+then:
+
+        pip install python-dotenv
+
 if not found run : 
 
         pip install python-dotenv
