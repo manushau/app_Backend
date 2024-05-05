@@ -9,7 +9,7 @@
 
 5. the project opens in VS Code
 
-6. you need to generate .venv file, so fllow the below steps:
+6. you need to generate .venv file, so follow the below steps:
 
 7. in VS Code terminal type: cd backend_server
 
