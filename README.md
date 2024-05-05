@@ -22,39 +22,46 @@
     then: .venv\Scripts\activate     (on Windows)
           source .venv/bin/activate  (on mac)
  
-![Screenshot 2024-04-04 at 12 51 56 pm](https://github.com/alexbaar/app_backend/assets/63990224/9c7a227b-3aae-4347-b86d-8022994d4da0)
 
-9. then type: pip install Django djangorestframework
+10. then type: pip install Django djangorestframework
 
-10. then go one level up. type: cd ..
+11. then go one level up. type: cd ..
 
-11. type: ls
+12. type: ls
 
-12. you should see: README.md, backend_server and other
+13. you should see: README.md, backend_server and other
 
-![Screenshot 2024-04-04 at 1 08 06 pm](https://github.com/alexbaar/app_backend/assets/63990224/bdbf0c24-795b-402f-825f-c5120f21edec)
-
-
-13. type : python3 manage.py makemigrations                          (if you work with python, not python3, then type: python manage.py makemigrations)
-
-14. then: python3 manage.py migrate                                  (if you work with python, not python3, then type: python manage.py makemigrations)
-
-15. to run the backend: python3 manage.py runserver 0.0.0.0:8000     (if you work with python, not python3, then type: python manage.py runserver 0.0.0.0:8000)
-
-16. !!!! Possible errors:
-    * 
-        backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
-        HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
-SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    python3 -m pip install      Pillow          (check your python version)
-
-17. ** UPDATED **
-    add a .env to store sensitive data.
+14.     add a .env to store sensitive data.
     first in VS Code in terminal type: pip install python-dotenv
     then at project root add a new file called ' .env '
     inside specify the following values:
         SECRET_KEY
         EMAIL_BACKEND
         DEFAULT_FROM_EMAIL
+
+
+15. type : python3 manage.py makemigrations                          (if you work with python, not python3, then type: python manage.py makemigrations)
+
+16. then: python3 manage.py migrate                                  (if you work with python, not python3, then type: python manage.py makemigrations)
+
+17. to run the backend: python3 manage.py runserver 0.0.0.0:8000     (if you work with python, not python3, then type: python manage.py runserver 0.0.0.0:8000)
+
+18. !!!! Possible errors:
+    * 
+        backend_server.acc_details.image: (fields.E210) Cannot use ImageField because Pillow is not installed.
+        HINT: Get Pillow at https://pypi.org/project/Pillow/ or run command "python -m pip install Pillow".
+SOLUTION : run in VS Code terminal:   python -m pip install Pillow   or    python3 -m pip install      Pillow          (check your python version)
+
+    * ModuleNotFoundError: No module named 'dotenv'
+
+SOLUTION : in terminal type : pip list
+find dotenv
+if found, delete it and re-install
+if not found run : pip install python-dotenv
+save project. Close VS Code and reopen. The error should be gone now. 
+
+
+
     
 
 
