@@ -19,6 +19,8 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import JSONParser
+from django.contrib.auth import get_user_model
+
 
 
 
@@ -278,3 +280,6 @@ def wrk_data(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
