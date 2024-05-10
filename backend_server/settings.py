@@ -23,10 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-p+o(#sfioy$e*&gh_uw7dhoi8swlc0@xc3uu^$qikr80w)*z9d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'True' 
 
-ALLOWED_HOSTS = ['192.168.1.31', 'localhost', '127.0.0.1']
-
+# settings.py
+# so that flutter and django can connect on my machine over network
+ALLOWED_HOSTS = [
+    "192.168.1.31",
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "192.168.1.104",
+]
 
 # Application definition
 
@@ -123,3 +130,26 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+'''
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.getenv('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))

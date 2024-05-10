@@ -1,53 +1,25 @@
 # Import necessary modules and classes
 
-from .models import Users, warehouse, acc_details, messages
-from .serializers import UserSerializer, AccDetailsSerializer, MessagesSerializer
+from .models import MyUser, AccountDetails, HelpCentreMessage, TerminateAccountMessage
+from .serializers import UserSerializer, AccountDetailsSerializer, HelpCentreMsgSerializer, TerminateAccMsgSerializer, WorkoutEntrySerializer, WorkoutTypeSerializer
 from .forms import UserCreationForm,SignUpForm,LoginForm
 from django.http import JsonResponse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status 
-from rest_framework.exceptions import ValidationError
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .auth_form_serializers import LoginSerializer, SignupSerializer
-from django.http import JsonResponse
-from .models import Users
-from .serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status 
-from .forms import UserCreationForm
-from .forms import SignUpForm
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from .forms import LoginForm  
-from django.shortcuts import redirect
-from .auth_form_serializers import LoginSerializer, SignupSerializer
-from rest_framework.exceptions import ValidationError
-from .models import warehouse  
-from django.http import JsonResponse
-from .models import warehouse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import warehouse
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
-
-from django.contrib.auth.models import User
-from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.core.mail import send_mail
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.contrib.auth.models import User
+from rest_framework.decorators import parser_classes
+from rest_framework.parsers import JSONParser
+
 
 
 def home(request):
@@ -61,17 +33,17 @@ def redirect_home(request):
 # View to handle GET, PUT, and DELETE requests for a specific user
 @api_view(['GET', 'PUT', 'DELETE'])
 def user_detail(request, email):
-    user = acc_details.objects.get(email=email)
+    user = AccountDetails.objects.get(email=email)
 
     if request.method == 'GET':
         # Retrieve details of a specific user
-        serializer = AccDetailsSerializer(user)
+        serializer = AccountDetailsSerializer(user)
         return Response(serializer.data)
     elif request.method == 'PUT':
         # Update details of a specific user
         data = request.data
         # Remove username from the update data
-        serializer = AccDetailsSerializer(user, data=request.data, partial=True)
+        serializer = AccountDetailsSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -87,53 +59,18 @@ def user_detail(request, email):
 @api_view(['GET'])
 def get_user_details(request, emaill, format=None):
     try:
-        user = acc_details.objects.get(email=emaill)
-    except acc_details.DoesNotExist:
+        user = AccountDetails.objects.get(email=emaill)
+    except AccountDetails.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         # Retrieve details of a specific user
-        serializer = AccDetailsSerializer(user)
+        serializer = AccountDetailsSerializer(user)
         return Response(serializer.data)
 
 
-# View for user signup using SignupSerializer
-def signup(request):
-    if request.method == 'POST':
-        serializer = SignupSerializer(data=request.POST)
-        if serializer.is_valid():
-            # Perform actions for valid signup data, like creating a new user
-            return redirect('login')
-    else:
-        serializer = SignupSerializer()
-    return render(request, 'signup.html', {'serializer': serializer})
 
 
-
-@api_view(['POST'])
-def login(request, format=None):
-    if request.method == 'POST':
-        fetched_email = request.data.get("email")
-        fetched_password = request.data.get("password")
-
-        fetched = warehouse.objects.filter(email=fetched_email).exists()
-        if fetched:
-            user = warehouse.objects.get(email=fetched_email)
-
-            if fetched_password != user.password:
-                print("incorrect password ")
-                return Response({"message": "incorrect password"}, status=202)
-            else:
-                return JsonResponse({'email': user.email, 'id': user.id})
-        else:
-            return Response("This username does not exist in the warehouse records.", status=203)
-
-
-
-        
-    elif request.method == 'GET':
-        # Render the signup form for GET requests
-        return render(request, 'login.html')
 
 
     # if request.method == 'POST':
@@ -148,45 +85,19 @@ def login(request, format=None):
     #     # Optionally, return a response indicating success or any other necessary data
     #     return Response({"message": "Data logged in successfully"}, status=201)
 
-
-#  test_take_input to use the warehouse model
-@api_view(['POST', 'GET'])
-def test_take_input(request, format=None):
-    if request.method == 'POST':
-        fetched_email = request.data.get("email")
-        fetched_username = request.data.get("user")
-        fetched_password = request.data.get("password")
-
-        email_is_exist = warehouse.objects.filter(email=fetched_email).exists()
-        username_is_exist = warehouse.objects.filter(username=fetched_username).exists()
-
-        if email_is_exist:
-            return Response("This email already exists in the warehouse records.", status=203)
-        elif username_is_exist:
-            return Response("This username already exists in the warehouse records.", status=203)
-        else:
-            input_into_db = warehouse(email=fetched_email, username=fetched_username, password=fetched_password)
-            input_into_db.save()
-            # Optionally, return a response indicating success or any other necessary data
-            return redirect('home')
-    elif request.method == 'GET':
-        # Render the signup form for GET requests
-        return render(request, 'signup.html')
-
     
-    
-#  user_list to retrieve users from the warehouse model
+#  user_list to retrieve users from the acc_details model
 @api_view(['GET', 'POST'])
 def user_list(request, format=None):
     if request.method == 'GET':
         # Retrieve all users from the warehouse model
-        users = acc_details.objects.all()
+        users = AccountDetails.objects.all()
         # Serialize all users
-        serializer = AccDetailsSerializer(users, many=True)
+        serializer = AccountDetailsSerializer(users, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
         # Create a new user in the warehouse model
-        serializer = AccDetailsSerializer(data=request.data)
+        serializer = AccountDetailsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -194,14 +105,45 @@ def user_list(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-#                                   HELP MESSAGES
+# -----------------------------------------------functions that work---------------------------------------------------------
 
-# Create 
+#                                   USER SIGN UP (create)
 @api_view(['POST'])
-def message_create(request, format=None):
+def signup(request, format=None):
+    if request.method == 'POST':
+        fetched_email = request.data.get("email")
+        fetched_username = request.data.get("username")
+        fetched_password = request.data.get("password")
+        fetched_timestamp = request.data.get("user_created")
+
+        email_is_exist = MyUser.objects.filter(email=fetched_email).exists()
+        username_is_exist = MyUser.objects.filter(username=fetched_username).exists()
+
+        if email_is_exist:
+            return Response("This email already exists in our records.", status=status.HTTP_409_CONFLICT)
+        elif username_is_exist:
+            return Response("This username already exists in our records.", status=status.HTTP_409_CONFLICT)
+        else:
+            # save details to user table; then signals.py use 'create_table2_entry' to insert email and username from that to AccountDetails Table
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"message": "Failed to create user.", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+#                                   SAVE HELP MESSAGES (create)
+
+@api_view(['POST'])
+def help_center_message_create(request, format=None):
     if request.method == 'POST':
         # Create a new message
-        serializer = MessagesSerializer(data=request.data)
+        serializer = HelpCentreMsgSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -209,8 +151,20 @@ def message_create(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+#                                   SAVE TERMINATE MESSAGES (create)
+
+@api_view(['POST'])
+@parser_classes([JSONParser])
+def terminate_account_message_create(request, format=None):
+    if request.method == 'POST':
+        serializer = TerminateAccMsgSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+#                                   LOGIN: AUTHENTICATE USER (check if they exist)
 
 @api_view(['POST'])
 @csrf_exempt
@@ -220,49 +174,107 @@ def login_view(request):
         password = request.data.get('password')
 
         try:
-            user = warehouse.objects.get(email=email)
+            user = MyUser.objects.get(email=email)
             if user.password == password:
                 request.session['email'] = user.email
-                request.session['id'] = user.id  # Start the session with user email
+                request.session['id'] = user.id  
+
+                # get account details for the user from AccountDetails table, not MyUser
+                account_details = AccountDetails.objects.filter(email=user.email)
+                serializer = AccountDetailsSerializer(account_details, many=True)
+
                 return Response({
                     'message': 'Login successful',
-                    'email': user.email,
-                    'id': user.id
+                    'id':user.id,
+                    'account_details': serializer.data,
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({'message': 'Incorrect password'}, status=status.HTTP_401_UNAUTHORIZED)
-        except warehouse.DoesNotExist:
+        except MyUser.DoesNotExist:
             return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-
+#                                   DELETE USER : authenticate password
     
-
-
-@api_view(['DELETE', 'GET'])
+# check password against the records, of a user that wants to delete their account; returns TRUE/FALSE
+@api_view(['GET'])
 @csrf_exempt
-def delete_user(request, id,format=None):
+def auth_password(request, email,format=None):
     if request.method == 'GET':
         # Extract password from the request data
         user_password = request.GET.get('password')
-
+        print('pass:' + user_password)
         try:
-            # Get the user instance. Adjust this if your user reference is different.
-            user = warehouse.objects.get(pk=id)
-            #print(user_password)
-            print(user_password)
-            # Authenticate the user to check if the password is correct
+            user = MyUser.objects.get(pk=email) # email is the PK of MyUser
+            
             if (user.password == user_password):
-                # Delete the user if authentication is successful
-                user.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+                # if the password matches, return 200 response
+                return Response(status=status.HTTP_200_OK)
             else:
-                # Return 403 Forbidden if the password is incorrect
+                # Return 403 Forbidden if the password does not match
                 return Response(status=status.HTTP_403_FORBIDDEN)
-        except User.DoesNotExist:
+        except MyUser.DoesNotExist:
             # Return 404 Not Found if the user does not exist
             return Response(status=status.HTTP_404_NOT_FOUND)
     else:
         # This else part is technically unnecessary since @api_view restricts to DELETE only
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
+
+#                                   DELETE USER : delete record
+
+# (and other info related to that user will be deleted automatically thanks to on_delete = CASCADE from models)
+@api_view(['DELETE'])
+@csrf_exempt
+def delete_user(request, email):
+    print('email received:'+email)
+    if request.method == 'DELETE':
+        
+        try:
+            user = MyUser.objects.get(pk=email)
+            # Perform password validation here if needed
+            # For demonstration, assuming password validation passes
+            user.delete()
+            return JsonResponse({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except MyUser.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    
+#                                   GET ALL DETAILS FROM ACCOUNT DETAILS TABLE 
+# for flutter login -> to save those details to Provider upon loggin in
+def get_all_details(request):
+    if request.method == 'POST':
+        # Retrieve all details from the model
+        all_details = AccountDetails.objects.all().values()
+        # Convert QuerySet to list for JSON serialization
+        details_list = list(all_details)
+        return JsonResponse({'details': details_list})
+    else:
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
+    
+
+#                                   SAVE WORKOUT SETTINGS 
+
+# from flutter 'set_workout_page.dart'
+@api_view(['POST'])
+def set_workout(request):
+    if request.method == 'POST':
+        workout_type_serializer = WorkoutTypeSerializer(data=request.data)
+        if workout_type_serializer.is_valid():
+            # save to WorkoutType
+            workout_type = workout_type_serializer.save()
+            return Response(workout_type_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(workout_type_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#                                   SAVE WORKOUT DATA (every second)
+ 
+@api_view(['POST'])
+def wrk_data(request):
+    if request.method == 'POST':
+        serializer = WorkoutEntrySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
